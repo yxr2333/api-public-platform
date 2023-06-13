@@ -8,30 +8,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var apiHandler = handlers.NewAPIHandler()
+type APIRouter struct {
+	apiHandler handlers.APIHandler
+}
 
-func loadAPIRouter(e *gin.RouterGroup) {
+func NewAPIRouter() *APIRouter {
+	return &APIRouter{
+		apiHandler: handlers.NewAPIHandler(),
+	}
+}
+
+func (ar *APIRouter) loadAPIRouter(e *gin.RouterGroup) {
 	api := e.Group("/apis")
 	{
 		api.POST("",
 			middlewares.ValidateRequest(&request.APICreateRequest{}),
-			apiHandler.CreateAPI)
+			ar.apiHandler.CreateAPI)
 		api.PUT("",
 			middlewares.ValidateRequest(&request.APIUpdateRequest{}),
-			apiHandler.UpdateAPI)
+			ar.apiHandler.UpdateAPI)
 		api.DELETE("/:id",
 			middlewares.Authorization("admin|superadmin"),
-			apiHandler.DeleteAPI)
-		api.GET("/:id", apiHandler.GetAPIByID)
+			ar.apiHandler.DeleteAPI)
+		api.GET("/:id", ar.apiHandler.GetAPIByID)
 		api.GET("/",
 			middlewares.Authorization("admin|superadmin"),
 			middlewares.ValidatePageQueryRequest(),
-			apiHandler.GetAllAPIs)
+			ar.apiHandler.GetAllAPIs)
 		api.POST("/enable/:id",
 			middlewares.Authorization("admin|superadmin"),
-			apiHandler.EnableAPI)
+			ar.apiHandler.EnableAPI)
 		api.POST("/disable/:id",
 			middlewares.Authorization("admin|superadmin"),
-			apiHandler.DisableAPI)
+			ar.apiHandler.DisableAPI)
 	}
 }

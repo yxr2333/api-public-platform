@@ -15,7 +15,14 @@ func main() {
 		log.Fatalf("Could not connect to database: %v", err)
 		return
 	}
-	err = db.AutoMigrate(&model.User{}, &model.Role{}, &model.API{}, &model.Permission{})
+	err = db.AutoMigrate(
+		&model.User{},
+		&model.Role{},
+		&model.API{},
+		&model.Permission{},
+		&model.APICallHistory{},
+		&model.UserAPI{},
+	)
 	if err != nil {
 		log.Fatalf("Could not migrate database: %v", err)
 		return
@@ -25,7 +32,8 @@ func main() {
 		log.Fatalf("Could not initialize translation: %v", err)
 		return
 	}
-	app := routers.SetUpRouter()
+	appRouters := routers.NewRouter()
+	app := appRouters.SetUpRouter()
 	err = app.Run(":8080")
 	if err != nil {
 		log.Fatalf("Could not run server: %v", err)

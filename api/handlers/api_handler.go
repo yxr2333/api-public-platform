@@ -14,8 +14,8 @@ type APIHandler struct {
 	apiService service.APIService
 }
 
-func NewAPIHandler() *APIHandler {
-	return &APIHandler{
+func NewAPIHandler() APIHandler {
+	return APIHandler{
 		apiService: service.NewAPIService(),
 	}
 }

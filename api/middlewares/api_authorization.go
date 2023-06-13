@@ -4,11 +4,15 @@ import (
 	"api-public-platform/internal/db"
 	"api-public-platform/pkg/model"
 	"fmt"
+	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
-func ValidateAPIToken(apiToken string, apiEndpoint string, requestMethod string) (bool, error) {
+func validateAPIToken(apiToken string, apiEndpoint string, requestMethod string) (bool, error) {
 	var user model.User
-	if err := db.MySQLDB.Where("api_token = ?", apiToken).First(&user).Error; err != nil {
+	if err := db.MySQLDB.Preload("Permissions").Where("api_token = ?", apiToken).First(&user).Error; err != nil {
 		return false, fmt.Errorf("invalid api token")
 	}
 	// 假设每个API都有一个唯一的endpoint和请求方法method组合
@@ -40,4 +44,36 @@ func ValidateAPIToken(apiToken string, apiEndpoint string, requestMethod string)
 
 	return false, fmt.Errorf("you don't have permission to access this resource")
 
+}
+
+func ValidateAPITokenAndPermissions() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.GetHeader("t")
+		if token == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "API Token required",
+			})
+			c.Abort()
+			return
+		}
+		urlPath := c.Request.URL.Path
+		endpoint := strings.TrimPrefix(urlPath, "/api/public/v1")
+		// 检查APIToken是否有效
+		isValid, err := validateAPIToken(token, endpoint, c.Request.Method)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+		if !isValid {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid api token",
+			})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
 }

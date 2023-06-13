@@ -51,6 +51,11 @@ func Authorization(requiredRole string) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		if requiredRole == "any" {
+			c.Set("userId", uint(userId))
+			c.Next()
+			return
+		}
 		role, err := roleService.GetRoleByUserId(uint(userId))
 		if err != nil {
 			c.JSON(http.StatusForbidden, gin.H{

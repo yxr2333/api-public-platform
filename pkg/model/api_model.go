@@ -23,4 +23,6 @@ type APICallHistory struct {
 	CalledBy     uint      `gorm:"not null"`
 	CalledByUser User      `gorm:"ForeignKey:CalledBy;AssociationForeignKey:ID"`
 	CalledAt     time.Time `gorm:"not null"`
+	CallStatus   string    `gorm:"type:varchar(50)"`
+	CallResponse string    `gorm:"type:varchar(255)"`
 }
