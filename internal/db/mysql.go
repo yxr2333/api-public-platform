@@ -1,6 +1,8 @@
 package db
 
 import (
+	"api-public-platform/config"
+	"fmt"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -9,9 +11,15 @@ import (
 
 var MySQLDB *gorm.DB
 var err error
-var DSN = "root:123456@tcp(127.0.0.1:3306)/mydb3?charset=utf8mb4&parseTime=True&loc=Local"
 
-func ConnectDatabase() (*gorm.DB, error) {
+func ConnectDatabase(cfg *config.ServerConfig) (*gorm.DB, error) {
+	DSN := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		cfg.DataSource.Username,
+		cfg.DataSource.Password,
+		cfg.DataSource.Host,
+		cfg.DataSource.Port,
+		cfg.DataSource.Database)
 	MySQLDB, err = gorm.Open(mysql.New(mysql.Config{
 		DSN:               DSN,
 		DefaultStringSize: 255,

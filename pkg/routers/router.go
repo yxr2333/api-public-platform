@@ -31,6 +31,7 @@ func (router *Router) SetUpRouter() *gin.Engine {
 	{
 		public.Use(middlewares.Authorization("any"))
 		public.Use(middlewares.APICallHistoryMiddleware())
+		public.Use(middlewares.CheckApiOpenMiddleware())
 		router.outerRouter.loadOuterRouter(public)
 	}
 	return r

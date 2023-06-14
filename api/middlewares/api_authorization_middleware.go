@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"api-public-platform/config"
 	"api-public-platform/internal/db"
 	"api-public-platform/pkg/model"
 	"fmt"
@@ -57,7 +58,7 @@ func ValidateAPITokenAndPermissions() gin.HandlerFunc {
 			return
 		}
 		urlPath := c.Request.URL.Path
-		endpoint := strings.TrimPrefix(urlPath, "/api/public/v1")
+		endpoint := strings.TrimPrefix(urlPath, config.ServerCfg.API.Outer.Prefix)
 		// 检查APIToken是否有效
 		isValid, err := validateAPIToken(token, endpoint, c.Request.Method)
 		if err != nil {

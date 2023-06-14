@@ -1,16 +1,22 @@
 package main
 
 import (
+	"api-public-platform/config"
 	"api-public-platform/internal/db"
 	"api-public-platform/pkg/model"
 	"api-public-platform/pkg/routers"
 	"api-public-platform/pkg/utils"
 	"log"
+	"strconv"
 )
 
 func main() {
-	// ...
-	db, err := db.ConnectDatabase()
+	err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Could not load config: %v", err)
+		return
+	}
+	db, err := db.ConnectDatabase(config.ServerCfg)
 	if err != nil {
 		log.Fatalf("Could not connect to database: %v", err)
 		return
@@ -34,7 +40,8 @@ func main() {
 	}
 	appRouters := routers.NewRouter()
 	app := appRouters.SetUpRouter()
-	err = app.Run(":8080")
+	port := strconv.Itoa(config.ServerCfg.Port)
+	err = app.Run(":" + port)
 	if err != nil {
 		log.Fatalf("Could not run server: %v", err)
 		return

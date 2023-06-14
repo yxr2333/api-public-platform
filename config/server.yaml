@@ -1,0 +1,12 @@
+port: 8080
+api:
+  outer:
+    prefix: /api/public/v1
+  internal:
+    prefix: /api/internal/v1
+datasource:
+  host: localhost
+  port: 3306
+  database: mydb3
+  username: root
+  password: 123456
