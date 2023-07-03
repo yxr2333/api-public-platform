@@ -1,1 +1,5 @@
 build/**
+
+test
+
+config/server.yaml

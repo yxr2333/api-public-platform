@@ -10,3 +10,18 @@ datasource:
   database: mydb3
   username: root
   password: 123456
+redis:
+  address: localhost:6379
+  password:
+  db: 0
+email:
+  qq:
+    host: smtp.qq.com
+    port: 465
+    username: xxxx@qq.com
+    password: xxxxxxxx
+  gmail:
+    host: smtp.gmail.com
+    port: 465
+    username:
+    password:

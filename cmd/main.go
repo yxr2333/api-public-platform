@@ -16,12 +16,12 @@ func main() {
 		log.Fatalf("Could not load config: %v", err)
 		return
 	}
-	db, err := db.ConnectDatabase(config.ServerCfg)
+	database, err := db.ConnectDatabase(config.ServerCfg)
 	if err != nil {
 		log.Fatalf("Could not connect to database: %v", err)
 		return
 	}
-	err = db.AutoMigrate(
+	err = database.AutoMigrate(
 		&model.User{},
 		&model.Role{},
 		&model.API{},

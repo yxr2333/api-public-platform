@@ -11,6 +11,8 @@ type ServerConfig struct {
 	Port       int           `yaml:"port"`
 	API        APIConfig     `yaml:"api"`
 	DataSource DataSourceCfg `yaml:"datasource"`
+	Email      EmailCfg      `yaml:"email"`
+	Redis      RedisCfg      `yaml:"redis"`
 }
 
 type APIConfig struct {
@@ -28,6 +30,22 @@ type DataSourceCfg struct {
 	Password string `yaml:"password"`
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
+}
+type EmailCfg struct {
+	QQ    EmailSenderCfg `yaml:"qq"`
+	Gmail EmailSenderCfg `yaml:"gmail"`
+}
+type RedisCfg struct {
+	Address  string `yaml:"address"`
+	Password string `yaml:"password"`
+	DB       int    `yaml:"db"`
+}
+
+type EmailSenderCfg struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
 }
 
 var ServerCfg *ServerConfig
